@@ -1,0 +1,855 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction to DSL in PowerFactory</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .presentation-container {
+            width: 90%;
+            max-width: 1200px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .slide {
+            display: none;
+            padding: 60px;
+            min-height: 600px;
+            position: relative;
+        }
+
+        .slide.active {
+            display: block;
+            animation: slideIn 0.5s ease-in-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        .slide h1 {
+            color: #2c3e50;
+            font-size: 2.5em;
+            margin-bottom: 30px;
+            text-align: center;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 15px;
+        }
+
+        .slide h2 {
+            color: #34495e;
+            font-size: 2em;
+            margin-bottom: 25px;
+            margin-top: 30px;
+        }
+
+        .slide h3 {
+            color: #2980b9;
+            font-size: 1.5em;
+            margin-bottom: 15px;
+            margin-top: 25px;
+        }
+
+        .slide p {
+            color: #555;
+            font-size: 1.2em;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .slide ul {
+            margin-left: 30px;
+            margin-bottom: 20px;
+        }
+
+        .slide li {
+            color: #555;
+            font-size: 1.1em;
+            line-height: 1.6;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .slide li::before {
+            content: "→";
+            color: #3498db;
+            font-weight: bold;
+            position: absolute;
+            left: -20px;
+        }
+
+        .highlight {
+            background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 20px 0;
+            border-left: 5px solid #3498db;
+        }
+
+        .code-block {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+            font-size: 1.1em;
+        }
+
+        .navigation {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            padding: 12px 20px;
+            background: #3498db;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.4);
+        }
+
+        .nav-btn:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(52, 152, 219, 0.6);
+        }
+
+        .nav-btn:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .slide-counter {
+            position: fixed;
+            bottom: 30px;
+            left: 30px;
+            background: rgba(52, 152, 219, 0.9);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-size: 1em;
+        }
+
+        .diagram {
+            background: #f8f9fa;
+            border: 2px dashed #3498db;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 1.1em;
+            color: #2c3e50;
+        }
+
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 20px 0;
+        }
+
+        .column {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .column:nth-child(2) {
+            border-left-color: #27ae60;
+        }
+    </style>
+</head>
+<body>
+    <div class="presentation-container">
+        <!-- Slide 1: Title -->
+        <div class="slide active">
+            <h1>Introduction to DSL</h1>
+            <div style="text-align: center; margin-top: 80px;">
+                <h2 style="color: #3498db; margin-bottom: 40px;">DIgSILENT Simulation Language</h2>
+                <div class="highlight">
+                    <h3>PowerFactory 2024</h3>
+                    <p style="font-size: 1.3em; margin-top: 20px;">Designing and Simulating Dynamic Models</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 2: What is DSL? -->
+        <div class="slide">
+            <h1>What is DSL?</h1>
+            <div class="highlight">
+                <h3>DIgSILENT Simulation Language (DSL)</h3>
+                <p>A specialized tool within PowerFactory for <strong>designing and simulating dynamic models</strong></p>
+            </div>
+            
+            <h2>Key Applications:</h2>
+            <ul>
+                <li>Dynamic system modeling</li>
+                <li>Controller design for electrical equipment</li>
+                <li>Custom transient analysis models</li>
+                <li>Power system stability studies</li>
+            </ul>
+
+            <div class="diagram">
+                <strong>DSL Bridge</strong><br>
+                Mathematical Models ↔ PowerFactory Simulation Environment
+            </div>
+        </div>
+
+        <!-- Slide 3: Core DSL Objects -->
+        <div class="slide">
+            <h1>Core DSL Objects</h1>
+            
+            <div class="two-column">
+                <div class="column">
+                    <h3>DSL Model (ElmDsl)</h3>
+                    <p>The instance object that implements your dynamic model in the network</p>
+                    <ul>
+                        <li>Connected to network elements</li>
+                        <li>Contains parameter values</li>
+                        <li>Executes during simulation</li>
+                    </ul>
+                </div>
+                
+                <div class="column">
+                    <h3>DSL Model Type (BlkDef)</h3>
+                    <p>The core definition object that defines model structure and logic</p>
+                    <ul>
+                        <li>Contains the model blueprint</li>
+                        <li>Defines equations and logic</li>
+                        <li>Reusable template</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight">
+                <p><strong>Think of it as:</strong> DSL Model Type is the "class definition", DSL Model is the "instance"</p>
+            </div>
+        </div>
+
+        <!-- Slide 4: Two Approaches -->
+        <div class="slide">
+            <h1>Two Definition Approaches</h1>
+            
+            <div class="two-column">
+                <div class="column">
+                    <h3>1. Graphical Method</h3>
+                    <ul>
+                        <li>Visual block diagrams</li>
+                        <li>Drag-and-drop interface</li>
+                        <li>Intuitive for engineers</li>
+                        <li>Uses predefined DSL macros</li>
+                        <li>Real-time visual feedback</li>
+                    </ul>
+                </div>
+                
+                <div class="column">
+                    <h3>2. Code-Based Method</h3>
+                    <ul>
+                        <li>Direct DSL code writing</li>
+                        <li>More flexible and powerful</li>
+                        <li>Suitable for complex models</li>
+                        <li>Text-based equations</li>
+                        <li>Advanced customization</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight">
+                <p><strong>Recommendation:</strong> Start with graphical method for learning, advance to code-based for complex applications</p>
+            </div>
+        </div>
+
+        <!-- Slide 5: Graphical Method Deep Dive -->
+        <div class="slide">
+            <h1>Graphical Method: Block Diagrams</h1>
+            
+            <div class="diagram">
+                <strong>Controller Block Diagram Structure</strong><br><br>
+                Input Signals → [DSL Macro Blocks] → Processing Logic → Output Signals
+            </div>
+
+            <h2>Key Components:</h2>
+            <ul>
+                <li><strong>DSL Macros:</strong> Pre-built basic blocks for complex models</li>
+                <li><strong>Block References:</strong> Instances of DSL macros in your diagram</li>
+                <li><strong>Signal Connections:</strong> Data flow between blocks</li>
+                <li><strong>Input/Output Definitions:</strong> Interface with PowerFactory</li>
+            </ul>
+
+            <div class="highlight">
+                <p><strong>Advantage:</strong> Visual representation makes model logic clear and maintainable</p>
+            </div>
+        </div>
+
+        <!-- Slide 6: DSL Libraries -->
+        <div class="slide">
+            <h1>DSL Macro Libraries</h1>
+            
+            <h2>Three Library Sources:</h2>
+            <div class="two-column">
+                <div class="column">
+                    <h3>Global DIgSILENT Library</h3>
+                    <ul>
+                        <li>Pre-installed with PowerFactory</li>
+                        <li>Standard control blocks</li>
+                        <li>Proven and tested macros</li>
+                    </ul>
+                </div>
+                
+                <div class="column">
+                    <h3>Custom Global Library</h3>
+                    <ul>
+                        <li>Organization-wide macros</li>
+                        <li>Standardized company blocks</li>
+                        <li>Shared across projects</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="column" style="margin-top: 20px; max-width: 100%;">
+                <h3>Project Library (Dynamic Models folder)</h3>
+                <ul>
+                    <li>User-defined DSL macros</li>
+                    <li>Project-specific blocks</li>
+                    <li>Custom developed macros</li>
+                </ul>
+            </div>
+
+            <div class="highlight">
+                <p><strong>Access Method:</strong> Drawing Tools toolbar → Library browser with search and filter functions</p>
+            </div>
+        </div>
+
+        <!-- Slide 7: DSL Functions -->
+        <div class="slide">
+            <h1>DSL Functions</h1>
+            
+            <div class="two-column">
+                <div class="column">
+                    <h3>Standard Functions</h3>
+                    <ul>
+                        <li>Basic mathematical operations</li>
+                        <li>Trigonometric functions</li>
+                        <li>Logical operations</li>
+                        <li>Standard programming functions</li>
+                    </ul>
+                </div>
+                
+                <div class="column">
+                    <h3>Special Functions</h3>
+                    <ul>
+                        <li><strong>delay:</strong> Time delay implementation</li>
+                        <li><strong>event:</strong> Event detection</li>
+                        <li><strong>gradlim_const:</strong> Gradient limiting</li>
+                        <li><strong>lapprox:</strong> Linear approximation</li>
+                        <li><strong>lim:</strong> Value limiting</li>
+                        <li><strong>reset:</strong> Reset functionality</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="highlight">
+                <p><strong>Documentation:</strong> Help → Technical References → DSL Macros<br>
+                <strong>Function Reference:</strong> Help → Scripting References → DPL</p>
+            </div>
+        </div>
+
+        <!-- Slide 8: Understanding DSL Model Roles -->
+        <div class="slide">
+            <h1>Understanding DSL Model Roles</h1>
+            
+            <div class="highlight">
+                <h3>One DSL Model Type (BlkDef) → Multiple Possible Roles</h3>
+                <p>The same BlkDef object can function differently based on its usage context</p>
+            </div>
+
+            <div class="diagram">
+                <strong>DSL Model Type (BlkDef)</strong><br>
+                ↓<br>
+                The Definition Object holding model structure and logic
+            </div>
+            
+            <h2>Role Determination Factors:</h2>
+            <ul>
+                <li><strong>Position in hierarchy:</strong> Top-level vs embedded</li>
+                <li><strong>Instantiation method:</strong> ElmDsl vs Block Reference</li>
+                <li><strong>Configuration flags:</strong> Macro flag setting</li>
+                <li><strong>Initialization responsibility:</strong> Self vs external</li>
+            </ul>
+
+            <div class="highlight">
+                <p><strong>Key Insight:</strong> Role is determined by <em>usage context</em>, not inherent properties</p>
+            </div>
+        </div>
+
+        <!-- Slide 9: Main Model Identification -->
+        <div class="slide">
+            <h1>Main Model Identification</h1>
+            
+            <div class="highlight">
+                <h3>🎯 How to Identify a Main Model</h3>
+            </div>
+
+            <div class="diagram">
+                <strong>Main Model Path</strong><br><br>
+                DSL Model Type (BlkDef) → DSL Model (ElmDsl) → Composite Model (ElmComp) → Network
+            </div>
+
+            <h2>Key Identification Criteria:</h2>
+            <ul>
+                <li><strong>Network Instantiation:</strong> Instantiated as DSL Model (ElmDsl) in network data</li>
+                <li><strong>Top-Level Position:</strong> Highest level in model hierarchy</li>
+                <li><strong>Complete Functionality:</strong> Contains full model logic, not partial</li>
+                <li><strong>Initialization Responsibility:</strong> Must contain initialization conditions for ALL:
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>State variables</li>
+                        <li>Input variables</li>
+                        <li>Output variables</li>
+                    </ul>
+                </li>
+            </ul>
+
+            <div class="code-block">
+                Question: "Is this DSL Model Type instantiated by an ElmDsl object?"<br>
+                Answer: YES → Main Model
+            </div>
+        </div>
+
+        <!-- Slide 10: Sub-block Identification -->
+        <div class="slide">
+            <h1>Sub-block Identification</h1>
+            
+            <div class="highlight">
+                <h3>🔧 How to Identify a Sub-block</h3>
+            </div>
+
+            <div class="diagram">
+                <strong>Sub-block Usage</strong><br><br>
+                DSL Model Type (BlkDef) → Block Reference (BlkRef) → Parent Block Diagram
+            </div>
+
+            <h2>Key Identification Criteria:</h2>
+            <ul>
+                <li><strong>Embedded Usage:</strong> Referenced within another DSL Model Type's block diagram</li>
+                <li><strong>Block Reference:</strong> Included via Block Reference (BlkRef) object</li>
+                <li><strong>Partial Functionality:</strong> Represents only part of Main Model's functionality</li>
+                <li><strong>No Self-Initialization:</strong> Typically lacks relevant initial conditions</li>
+                <li><strong>Hierarchical Position:</strong> Not the top-level model</li>
+            </ul>
+
+            <div class="code-block">
+                Question: "Is this DSL Model Type referenced by a BlkRef within another model?"<br>
+                Answer: YES → Sub-block
+            </div>
+
+            <div class="highlight">
+                <p><strong>Purpose:</strong> Modular building blocks for complex hierarchical models</p>
+            </div>
+        </div>
+
+        <!-- Slide 11: DSL Macro Identification -->
+        <div class="slide">
+            <h1>DSL Macro Identification</h1>
+            
+            <div class="highlight">
+                <h3>⚙️ How to Identify a DSL Macro</h3>
+            </div>
+
+            <h2>Primary Identification:</h2>
+            <div class="code-block">
+                DSL Model Type (BlkDef) → Basic Options Tab → "Macro" Flag = ✓ CHECKED
+            </div>
+
+            <h2>DSL Macro Characteristics:</h2>
+            <ul>
+                <li><strong>Specific Sub-block Type:</strong> Special category of sub-block</li>
+                <li><strong>Lowest-Level Building Blocks:</strong> Basic reusable functions</li>
+                <li><strong>Common Functions:</strong> Gains, filters, integrators, limiters</li>
+                <li><strong>Maximum Reusability:</strong> Designed for multiple uses</li>
+                <li><strong>Typically Code-Based:</strong> Pure DSL code preferred over graphical</li>
+            </ul>
+
+            <h2>Usage Context:</h2>
+            <ul>
+                <li><strong>Block Reference Integration:</strong> Used via BlkRef in higher-level diagrams</li>
+                <li><strong>Multi-Output Handling:</strong> All defined outputs must be accounted for</li>
+                <li><strong>Library Distribution:</strong> Often stored in libraries for sharing</li>
+            </ul>
+
+            <div class="highlight">
+                <p><strong>Why Code-Based?</strong> Graphical macros reduce reusability and flexibility</p>
+            </div>
+        </div>
+
+        <!-- Slide 12: Role Identification Summary -->
+        <div class="slide">
+            <h1>Role Identification Quick Guide</h1>
+            
+            <div class="highlight">
+                <h3>Decision Tree for DSL Model Type Roles</h3>
+            </div>
+
+            <div class="diagram">
+                <strong>DSL Model Type (BlkDef) Role Decision</strong><br><br>
+                ❓ Is it instantiated by ElmDsl in network?<br>
+                ✅ YES → <strong>Main Model</strong><br>
+                ❌ NO → Continue...<br><br>
+                ❓ Is it referenced by BlkRef in another model?<br>
+                ✅ YES → <strong>Sub-block</strong><br>
+                ❌ NO → Unused Definition<br><br>
+                ❓ Does it have "Macro" flag checked?<br>
+                ✅ YES → <strong>DSL Macro</strong> (special sub-block)<br>
+                ❌ NO → <strong>Regular Sub-block</strong>
+            </div>
+
+            <div class="two-column">
+                <div class="column">
+                    <h3>Main Model Checklist</h3>
+                    <ul>
+                        <li>✓ ElmDsl instantiation</li>
+                        <li>✓ Network connection</li>
+                        <li>✓ Complete initialization</li>
+                        <li>✓ Top-level hierarchy</li>
+                    </ul>
+                </div>
+                
+                <div class="column">
+                    <h3>Sub-block/Macro Checklist</h3>
+                    <ul>
+                        <li>✓ BlkRef reference</li>
+                        <li>✓ Partial functionality</li>
+                        <li>✓ External initialization</li>
+                        <li>✓ Reusable design</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Slide 13: Practical Implementation -->
+        <div class="slide">
+            <h1>Practical Implementation</h1>
+            
+            <h2>Setting Up Model Hierarchy:</h2>
+            
+            <h3>1. Create DSL Macros (Building Blocks)</h3>
+            <ul>
+                <li>Create DSL Model Type (BlkDef)</li>
+                <li>Check "Macro" flag in Basic Options</li>
+                <li>Define using DSL code (preferred) or graphically</li>
+                <li>Do NOT include initialization conditions</li>
+            </ul>
+
+            <h3>2. Create Sub-blocks (if needed)</h3>
+            <ul>
+                <li>Create DSL Model Type (BlkDef)</li>
+                <li>Leave "Macro" flag unchecked</li>
+                <li>Use Block References to include macros</li>
+                <li>Handle partial model functionality</li>
+            </ul>
+
+            <h3>3. Create Main Model</h3>
+            <ul>
+                <li>Create DSL Model Type (BlkDef) for top level</li>
+                <li>Include sub-blocks/macros via Block References</li>
+                <li>Define complete initialization conditions</li>
+                <li>Instantiate as DSL Model (ElmDsl) in network</li>
+            </ul>
+
+            <div class="highlight">
+                <p><strong>Key Insight:</strong> The ElmDsl object is just an instance of the Main Model for simulation</p>
+            </div>
+        </div>
+
+        <!-- Slide 14: Input/Output Configuration -->
+        <div class="slide">
+            <h1>Input/Output Configuration</h1>
+            
+            <div class="highlight">
+                <h3>Configuration Requirements Based on Identified Role</h3>
+            </div>
+
+            <h2>Main Model Requirements:</h2>
+            <div class="two-column">
+                <div class="column">
+                    <h3>📥 Inputs</h3>
+                    <ul>
+                        <li><strong>Initialization REQUIRED</strong></li>
+                        <li>Can be done within model or externally</li>
+                        <li>Unconnected inputs need start values</li>
+                        <li>Missing start values trigger errors</li>
+                    </ul>
+                </div>
+                
+                <div class="column">
+                    <h3>📤 Outputs</h3>
+                    <ul>
+                        <li><strong>Initialization REQUIRED</strong></li>
+                        <li>Internal or external initialization</li>
+                        <li>Must define steady-state values</li>
+                        <li>Based on load flow calculation</li>
+                    </ul>
+                </div>
+            </div>
+
+            <h2>Sub-block & DSL Macro Requirements:</h2>
+            <div class="highlight">
+                <p><strong>Inputs & Outputs:</strong> Typically <strong>do NOT contain initial conditions</strong><br>
+                <strong>Reason:</strong> Provides flexibility for higher-level initialization<br>
+                <strong>Exception:</strong> All defined outputs must be accounted for in Block Reference calls</p>
+            </div>
+
+            <div class="code-block">
+                Macro Definition: 3 outputs defined<br>
+                Block Reference Call: Must list all 3 outputs (even if unused)
+            </div>
+        </div>
+        <div class="slide">
+            <h1>Initialization Methods</h1>
+            
+            <h2>1. Direct Initialization (Equations Page)</h2>
+            <div class="code-block">
+                inc(varnm) = expr
+            </div>
+            <p>Evaluated when the model is reset - defines initial conditions directly</p>
+
+            <h2>2. Automatic Initialization</h2>
+            <ul>
+                <li>If inc(varnm) not defined, normal assignment evaluated</li>
+                <li>Uses start values for unconnected inputs</li>
+                <li>Based on steady-state operating point</li>
+            </ul>
+
+            <h2>3. DPL-based Configuration Script</h2>
+            <ul>
+                <li>Optional script for Top-level models</li>
+                <li>Executed after load flow, before initialization</li>
+                <li>Overwrites initial parameter values</li>
+                <li>Provides flexible parameter configuration</li>
+            </ul>
+
+            <div class="highlight">
+                <p><strong>Purpose:</strong> Determine steady-state operating point before dynamic simulation starts</p>
+            </div>
+        </div>
+
+        <!-- Slide 16: Graphical I/O Definition -->
+        <div class="slide">
+            <h1>Graphical I/O Definition</h1>
+            
+            <div class="diagram">
+                <strong>Boundary Frame Structure</strong><br><br>
+                Left Side: Input Signals → [DSL Model Logic] → Right Side: Output Signals
+            </div>
+
+            <h2>Automatic Signal Detection:</h2>
+            <ul>
+                <li><strong>Input Variables:</strong> Signal lines starting from left side of Boundary frame</li>
+                <li><strong>Output Variables:</strong> Signal lines ending on right side of Boundary frame</li>
+                <li><strong>Automatic Recognition:</strong> PowerFactory identifies I/O from diagram structure</li>
+            </ul>
+
+            <h2>Important Notes:</h2>
+            <div class="highlight">
+                <ul>
+                    <li>All defined outputs must be accounted for in macro calls</li>
+                    <li>Macro definition specifies available outputs</li>
+                    <li>Unused outputs still need to be listed in calls</li>
+                    <li>Initialization logic handled at Main Model level</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Slide 17: Step-by-Step Process -->
+        <div class="slide">
+            <h1>DSL Development Process</h1>
+            
+            <div class="highlight">
+                <h3>Enhanced 6-Step Process:</h3>
+            </div>
+
+            <h2>Step 1: Define Model Hierarchy</h2>
+            <p>Determine if creating Main Model or DSL Macro</p>
+
+            <h2>Step 2: Create DSL Model Type (BlkDef)</h2>
+            <p>Set appropriate flags (Macro flag for sub-blocks)</p>
+
+            <h2>Step 3: Choose Definition Method</h2>
+            <p>Select between graphical block diagram or direct code approach</p>
+
+            <h2>Step 4: Build the Block Diagram</h2>
+            <ul>
+                <li>Open block diagram editor</li>
+                <li>Define Boundary frame for I/O</li>
+                <li>Insert DSL Macros as Block References</li>
+                <li>Connect blocks and define signal flow</li>
+            </ul>
+
+            <h2>Step 5: Configure Inputs/Outputs</h2>
+            <p>Apply appropriate initialization based on model type</p>
+
+            <h2>Step 6: Implement Logic & Initialize</h2>
+            <p>Use built-in DSL functions and define initial conditions</p>
+        </div>
+
+        <!-- Slide 18: Best Practices -->
+        <div class="slide">
+            <h1>Best Practices</h1>
+            
+            <h2>Model Design:</h2>
+            <ul>
+                <li><strong>Plan Hierarchy:</strong> Decide Main Model vs DSL Macro early</li>
+                <li><strong>Initialize Properly:</strong> Follow initialization rules for model type</li>
+                <li><strong>Handle Unconnected Inputs:</strong> Always provide start values</li>
+                <li><strong>Document I/O:</strong> Clearly define input/output purposes</li>
+            </ul>
+
+            <h2>Development Workflow:</h2>
+            <ul>
+                <li><strong>Start with Macros:</strong> Build reusable components first</li>
+                <li><strong>Test Incrementally:</strong> Validate each level of hierarchy</li>
+                <li><strong>Use Configuration Scripts:</strong> For flexible parameter management</li>
+                <li><strong>Leverage Load Flow:</strong> Base initialization on steady-state</li>
+            </ul>
+
+            <div class="highlight">
+                <p><strong>Common Pitfall:</strong> Forgetting to initialize inputs/outputs in Main Models leads to simulation errors</p>
+            </div>
+        </div>
+
+        <!-- Slide 19: Benefits and Applications -->
+        <div class="slide">
+            <h1>Benefits & Applications</h1>
+            
+            <h2>Key Benefits:</h2>
+            <ul>
+                <li><strong>Hierarchical Design:</strong> Main Models with reusable sub-blocks</li>
+                <li><strong>Flexible Initialization:</strong> Multiple initialization methods</li>
+                <li><strong>Automatic I/O Detection:</strong> Graphical interface handles connections</li>
+                <li><strong>Modular Architecture:</strong> Build complex models from simple macros</li>
+                <li><strong>Integration:</strong> Seamless PowerFactory integration</li>
+            </ul>
+
+            <h2>Common Applications:</h2>
+            <ul>
+                <li>Generator excitation systems (Main Model + Control Macros)</li>
+                <li>Load tap changer controllers with multiple stages</li>
+                <li>HVDC control systems with hierarchical structure</li>
+                <li>Power system stabilizers with modular components</li>
+                <li>Renewable energy controllers with flexible I/O</li>
+            </ul>
+        </div>
+
+        <!-- Slide 20: Getting Started -->
+        <div class="slide">
+            <h1>Getting Started</h1>
+            
+            <div class="highlight">
+                <h3>Recommended Learning Path:</h3>
+            </div>
+
+            <h2>1. Understand Model Hierarchy</h2>
+            <p>Learn the difference between Main Models and DSL Macros</p>
+
+            <h2>2. Master Role Identification</h2>
+            <p>Learn to distinguish Main Models, Sub-blocks, and DSL Macros</p>
+
+            <h2>3. Explore Existing Libraries</h2>
+            <p>Study pre-built DSL macros and their I/O structures</p>
+
+            <h2>4. Study Documentation</h2>
+            <ul>
+                <li>DSL Macros Documentation (Help menu)</li>
+                <li>Initialization and Configuration sections</li>
+                <li>PowerFactory User Manual Chapter 29</li>
+            </ul>
+
+            <h2>5. Practice with Examples</h2>
+            <p>Start with simple Main Model → DSL Macro combinations</p>
+
+            <div class="code-block">
+                Next Steps: Hands-on DSL I/O Configuration Workshop
+            </div>
+        </div>
+    </div>
+
+    <div class="slide-counter">
+        <span id="current-slide">1</span> / <span id="total-slides">10</span>
+    </div>
+
+    <div class="navigation">
+        <button class="nav-btn" id="prev-btn" onclick="changeSlide(-1)">← Previous</button>
+        <button class="nav-btn" id="next-btn" onclick="changeSlide(1)">Next →</button>
+    </div>
+
+    <script>
+        let currentSlide = 0;
+        const slides = document.querySelectorAll('.slide');
+        const totalSlides = slides.length;
+        
+        document.getElementById('total-slides').textContent = totalSlides;
+
+        function showSlide(n) {
+            slides[currentSlide].classList.remove('active');
+            currentSlide = (n + totalSlides) % totalSlides;
+            slides[currentSlide].classList.add('active');
+            
+            document.getElementById('current-slide').textContent = currentSlide + 1;
+            
+            // Update navigation buttons
+            document.getElementById('prev-btn').disabled = currentSlide === 0;
+            document.getElementById('next-btn').disabled = currentSlide === totalSlides - 1;
+        }
+
+        function changeSlide(direction) {
+            if (direction === 1 && currentSlide < totalSlides - 1) {
+                showSlide(currentSlide + 1);
+            } else if (direction === -1 && currentSlide > 0) {
+                showSlide(currentSlide - 1);
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' || e.key === ' ') {
+                changeSlide(1);
+            } else if (e.key === 'ArrowLeft') {
+                changeSlide(-1);
+            }
+        });
+
+        // Initialize
+        showSlide(0);
+    </script>
+</body>
+</html>
